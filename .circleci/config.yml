@@ -1,0 +1,45 @@
+defaults: &defaults
+  working_directory: ~/src
+  docker:
+    - image: openmaths/base
+
+whitelist: &whitelist
+  paths:
+    - "**"
+
+version: 2
+jobs:
+  checkout:
+    <<: *defaults
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: ~/src
+          <<: *whitelist
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/src
+      - run: 
+          name: Create GCloud Service Key
+          command: echo $GCLOUD_SERVICE_KEY | base64 -d > ${HOME}/gcloud-service-key.json
+      - run:
+          name: Push to GCloud Storage
+          command: |
+            gcloud --quiet components update
+            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            gcloud config set project $GCLOUD_PROJECT
+            gsutil -m rm gs://cdn.openmaths.io/**
+            gsutil -m cp -r -Z ./public/** gs://cdn.openmaths.io
+            gsutil -m acl ch -r -u AllUsers:R gs://cdn.openmaths.io
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - checkout
+      - deploy:
+          requires:
+            - checkout

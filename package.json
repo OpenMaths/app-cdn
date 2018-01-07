@@ -1,0 +1,35 @@
+{
+  "name": "@openmaths/app-cdn",
+  "version": "0.3.0",
+  "description": "The OpenMaths CDN App",
+  "main": "./dist/main.js",
+  "typings": "./dist/main.d.ts",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "scripts": {
+    "start": "make compile && node ./dist/main.js",
+    "test": "make test"
+  },
+  "dependencies": {
+    "@openmaths/utils": "^1.0.0",
+    "@threestup/monads": "^0.4.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "@types/jest": "22.0.1",
+    "@types/node": "8.5.7",
+    "jest": "22.0.4",
+    "prettier": "1.9.2",
+    "prettier-standard": "8.0.0",
+    "ts-jest": "22.0.1",
+    "typescript": "2.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:OpenMaths/app-cdn.git"
+  },
+  "author": "Slavomir Vojacek <slavomirvojacek@gmail.com>",
+  "license": "ISC"
+}
